@@ -1,5 +1,6 @@
 package elementHelpers;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,6 +20,11 @@ public class WebDriverWaitVariants {
 	public void waitForTextToAppear(WebElement waitThis, String textToAppear) {
 		WebDriverWait wait = new WebDriverWait(driver, 200);
 	    wait.until(ExpectedConditions.textToBePresentInElement(waitThis, textToAppear));
+	}
+	
+	public void changeFrame() {
+		WebDriverWait wait = new WebDriverWait(driver,200);
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("lightviewContent")));
 	}
 	
 	public void waitForAttribute(WebElement waitThis){

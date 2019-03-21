@@ -32,4 +32,7 @@ public class FindByWebElementVariants {
 	@FindBy(xpath="(//img[@data-action='Execute data-customevent='])[position()=1]")
 	private WebElement clickableE;
 	
+	@FindBy(xpath="(//span[contains(text()='Sinistri')])[last()]")
+	private WebElement clickableB;
+	
 }

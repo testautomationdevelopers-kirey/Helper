@@ -17,7 +17,9 @@ public class ClickButtonByCheckingTableValues {
 		waitForClickable(this.clickableE);
 		
 		try {
-			for(int i = 1; i<15;i++) {
+			int rowCount = driver.findElements(By.xpath("//div[@data-columnid='versionName']")).size();
+			
+			for(int i = 1; i<=rowCount;i++) {
 				searchVersion = driver.findElement(By.xpath("(//div[@data-columnid='versionName'])[position()="+i+"]"));
 				actualVersion = searchVersion.getText();	
 

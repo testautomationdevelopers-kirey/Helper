@@ -6,14 +6,26 @@ import org.openqa.selenium.support.FindBy;
 
 public class ClickButtonJavaScriptExecutor {
 	
-	//@FindBy(xpath="//b[text()='Autorizzazioni per Livelli Pagamenti']") 	
-		@FindBy(xpath="//td[@onclick=\"clessidra();location.href='SISServletPagamentiSospesiPerLivelli'\"]")
+	
+		@FindBy(id="authorPay")
 		private WebElement authorizationForPayments;
+		
+		@FindBy(id="authorPay2")
+		private WebElement authorizationForPayments2;
 	
 	public ClickButtonJavaScriptExecutor clickPaymentsAuthorization() {
 		JavascriptExecutor js = (JavascriptExecutor)driver;
 		js.executeScript("arguments[0].click();", authorizationForPayments);
 		return this;
 	}
+	
+	public ClickButtonJavaScriptExecutor clickPaymentsAuthorization2() {
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		js.executeScript("arguments[0].scrollIntoView()", this.authorizationForPayments2);
+		js.executeScript("arguments[0].click();", this.authorizationForPayments2);
+		return this;
+	}
+	
+	
 
 }

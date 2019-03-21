@@ -22,8 +22,10 @@ public class RandomLicensePlate {
 	{
 		Random rand = new Random();
 		int  n = rand.nextInt(899) + 100;
+		
 		String licensePlate = String.valueOf(n);
 		licensePlate = "EM" + n + "AB";
+		
 		return licensePlate;
 	}
 

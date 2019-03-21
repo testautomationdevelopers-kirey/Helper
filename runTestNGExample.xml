@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="InserimentoTests" > <!-- FOR PARALLEL ADD->  thread-count="3" parallel="tests"  <-FOR PARALLEL ADD-->
+	<parameter name="environment-data"
+		value=".\src\test\java\it\avivaitalia\sis\test\testdata\EnvironmentData.json" />
+	<parameter name="results-data"
+		value=".\src\test\java\it\avivaitalia\sis\test\testdata\ResultsData.json" />
+	<parameter name="claims-data"
+		value=".\src\test\java\it\avivaitalia\sis\test\testdata\ClaimsData.json" />
+
+
+	<listeners>
+		<listener
+			class-name="it.avivaitalia.sis.test.TestFailureListener" />
+	</listeners>
+ <!-- 
+	<test thread-count="5" name="TC720Test">
+		<parameter name="TC720-data-file"
+			value="C:\git\sisnrt\AvivaItalia\src\test\java\it\avivaitalia\sis\test\testdata\TC720data.json" />
+		<classes>
+			<class name="it.avivaitalia.sis.test.TC720Test" />
+		</classes>
+	</test> 
+
+	<test thread-count="5" name="TC727Test">
+		<parameter name="TC727-data-file"
+			value="C:\git\sisnrt\AvivaItalia\src\test\java\it\avivaitalia\sis\test\testdata\TC727data.json" />
+		<classes>
+			<class name="it.avivaitalia.sis.test.TC727Test" />
+		</classes>
+	</test>-->
+
+	<test thread-count="5" name="TC728Test">
+		<parameter name="TC728-data-file"
+			value="C:\git\sisnrt\AvivaItalia\src\test\java\it\avivaitalia\sis\test\testdata\TC728data.json" />
+		<classes>
+			<class name="it.avivaitalia.sis.test.TC728Test" />
+		</classes>
+	</test>
+<!--
+	<test thread-count="5" name="TC729Test">
+		<parameter name="TC729-data-file"
+			value="C:\git\sisnrt\AvivaItalia\src\test\java\it\avivaitalia\sis\test\testdata\TC729data.json" />
+		<classes>
+			<class name="it.avivaitalia.sis.test.TC729Test" />
+		</classes>
+	</test> 
+
+
+	<test thread-count="5" name="TC752Test">
+		<parameter name="TC752-data-file"
+			value="C:\git\sisnrt\AvivaItalia\src\test\java\it\avivaitalia\sis\test\testdata\TC752data.json" />
+		<classes>
+			<class name="it.avivaitalia.sis.test.TC752Test" />
+		</classes>
+	</test>  -->
+	
+	
+
+
+</suite> 
+

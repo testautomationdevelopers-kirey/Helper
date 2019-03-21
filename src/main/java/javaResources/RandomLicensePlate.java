@@ -17,5 +17,14 @@ public class RandomLicensePlate {
 		
 		return "EM" + randomNum + turn + river;
 	}
+	
+	public String GenerateLicensePlate2()
+	{
+		Random rand = new Random();
+		int  n = rand.nextInt(899) + 100;
+		String licensePlate = String.valueOf(n);
+		licensePlate = "EM" + n + "AB";
+		return licensePlate;
+	}
 
 }

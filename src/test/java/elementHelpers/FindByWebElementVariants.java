@@ -29,10 +29,13 @@ public class FindByWebElementVariants {
 	@FindBy(xpath="//td[@class='zephyr-test-execution-entry-cycle']")
 	private WebElement testCycle;
 	
+	@FindBy(xpath="//font[@color='#183078' and @size='3']")
+	private WebElement textSome;
+	
 	@FindBy(xpath="(//img[@data-action='Execute data-customevent='])[position()=1]")
 	private WebElement clickableE;
 	
 	@FindBy(xpath="(//span[contains(text()='Sinistri')])[last()]")
 	private WebElement clickableB;
-	
+
 }

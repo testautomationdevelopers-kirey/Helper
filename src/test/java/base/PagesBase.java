@@ -5,16 +5,19 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 public class PagesBase {
 	
 	protected WebDriver driver = null;
 	protected String pageName = getClass().getSimpleName();
-	protected WriterHelper fileWriter = new WriterHelper();
-	protected ScreenshotTaker screenShotTaker = new ScreenshotTaker();
+	protected JSONHelper jHelper = new JSONHelper();
+	private ScreenshotTaker screenShotTaker = new ScreenshotTaker();
 	
-	public enum Status { FINAL, FAIL, NORMAL }; 
-	
+	public enum Status { 
+		FINAL, 
+		FAIL, 
+		NORMAL 
+	}; 
+
 	/**
 	 * Take screenshot
 	 * @param status	- FINAL, FAIL OR NORMAL depending on test stage
@@ -22,9 +25,9 @@ public class PagesBase {
 	 * @param testName	- current @Test name
 	 * @param pageName	- current page object name
 	 */
-	public void TakeScreenshot(Status status, WebDriver driver, String testName, String pageName)
+	protected void takeScreenshot(Status status, WebDriver driver, String testName, String pageName)
 	{
-		screenShotTaker.TakeScreenshot(status, driver, testName, pageName);
+		screenShotTaker.screenshot(status, driver, testName, pageName);
 	}
 	
 	/**
@@ -32,10 +35,10 @@ public class PagesBase {
 	 * @param className - Current Test Case
 	 * @param result	- result to write into JSON
 	 */
-	public void WriteResult(String className, String result)
+	protected void writeResult(String className, String result)
 	{
 		try {
-			fileWriter.ResultWriter(className, result);
+			jHelper.writeResult(className, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,10 +49,10 @@ public class PagesBase {
 	 * @param className - Current Test Case
 	 * @param claim		- claim to write into JSON
 	 */
-	public void WriteClaim(String className, String claim)
+	protected void writeClaim(String className, String claim)
 	{
 		try {
-			fileWriter.ClaimWriter(className, claim);
+			jHelper.writeClaim(className, claim);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,16 +62,16 @@ public class PagesBase {
 	 * Wait for the given WebElement to be visible
 	 * @param waitThis	- wanted element in question
 	 */
-	public void WaitForVisible(WebElement waitThis){
+	protected void waitForVisible(WebElement waitThis){
 		WebDriverWait wait = new WebDriverWait(driver, 120); 
 		wait.until(ExpectedConditions.visibilityOf(waitThis));
 	}
 	
 	/**
 	 * Wait for the given WebElement to be clickable
-	 * @param waitThis	- wanted element in question
+	 * @param waitThis	- element to check
 	 */
-	public void WaitForClickable(WebElement waitThis){
+	protected void waitForClickable(WebElement waitThis){
 		WebDriverWait wait = new WebDriverWait(driver, 120); 
 		wait.until(ExpectedConditions.elementToBeClickable(waitThis));
 	}
@@ -78,23 +81,36 @@ public class PagesBase {
 	 * Checks 'aria-expended' property
 	 * @param waitThis	- dropdown to check
 	 */
-	public void WaitForDropdown(WebElement waitThis){
+	protected void waitForDropdown(WebElement waitThis){
 		WebDriverWait wait = new WebDriverWait(driver, 120); 
 		wait.until(ExpectedConditions.attributeToBe(waitThis, "aria-expanded", "true"));
 	}
 	
 	/**
-	 * Returns pageobject's WebDriver
-	 * @return
+	 * Wait for the given WebElement to have specified value.
+	 * @param waitThis	-	element to check
+	 * @param text		- 	text to be present
 	 */
-	public WebDriver getDriver() {
+	protected void waitForText(WebElement waitThis, String text){
+		WebDriverWait wait = new WebDriverWait(driver, 120); 
+		wait.until(ExpectedConditions.textToBePresentInElementValue(waitThis, text));
+	}
+	
+	/**
+	 * Return pageobject WebDriver
+	 * 
+	 */
+	protected WebDriver getDriver() {
 		return driver;
 	}
 	
 	
-	public String GetName()
+	/**
+	 * Return pageobject simple name
+	 */
+	protected String getName()
 	{
 		return this.getClass().getSimpleName();
 	}
-
+	
 }

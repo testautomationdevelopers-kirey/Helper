@@ -14,7 +14,7 @@ public class ScreenshotTaker {
 
 	private String screenshotFolderPath = System.getProperty("user.dir") + File.separator + "Screenshots" + File.separator;
 	
-	public void TakeScreenshot(Status status, WebDriver driver, String testName, String pageName)
+	public void screenshot(Status status, WebDriver driver, String testName, String pageName)
 	{
 		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 

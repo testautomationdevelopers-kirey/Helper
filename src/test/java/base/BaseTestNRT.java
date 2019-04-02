@@ -280,4 +280,14 @@ public class BaseTestNRT {
 	{
 		return jHelper.getTestClaim(suiteTestName);
 	}
+	
+	/**
+	 * Get value for a given key
+	 * @param key	-	key for which are getting the value
+	 * @return	(String) Value
+	 */
+	public String getJSONAttribute(String key)
+	{
+		return jHelper.getJSONAttribute(key);
+	}
 }

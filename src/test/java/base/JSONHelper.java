@@ -18,6 +18,7 @@ public class JSONHelper {
 	public static String claimVault;
 	private String resultFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\ResultsData.json";
 	private String claimsFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\ClaimsData.json";
+	private String testDataFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\TC740data.json";
 	
 	/**
 	 * Write test result into JSON file
@@ -166,6 +167,39 @@ public class JSONHelper {
 		catch (ParseException e) { e.printStackTrace(); }
 		catch (Exception e) { e.printStackTrace(); }
 		
-		return "No claim found for " + testName;
+		return "No claim found for: " + testName;
+	}
+	
+	/**
+	 * Return value for a given key
+	 * @param key	-	key for which are getting the value
+	 * @return	(String) Value
+	 */
+	public String getJSONAttribute(String key)
+	{
+		
+		try {	
+			JSONParser parser = new JSONParser();
+			Object oldObj = parser.parse(new FileReader(testDataFilePath));
+			JSONObject jsonObject = (JSONObject) oldObj;
+				
+			Set<?> keyResultSet = jsonObject.keySet();
+			Iterator<?> iter = keyResultSet.iterator();
+			
+			while(iter.hasNext())
+			{
+				Object keyFromSet = iter.next();
+				if (keyFromSet.equals(key))
+				{
+					return (String) jsonObject.get(keyFromSet);
+				}
+			}
+		} 
+		catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+		catch (ParseException e) { e.printStackTrace(); }
+		catch (Exception e) { e.printStackTrace(); }
+		
+		return "No value found for: " + key + " key";
 	}
 }

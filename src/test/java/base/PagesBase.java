@@ -9,7 +9,7 @@ public class PagesBase {
 	
 	protected WebDriver driver = null;
 	protected String pageName = getClass().getSimpleName();
-	protected JSONHelper jHelper = new JSONHelper();
+	protected JSONHelper jHelper =JSONHelper.getInstance();
 	private ScreenshotTaker screenShotTaker = new ScreenshotTaker();
 	
 	public enum Status { 
@@ -18,6 +18,7 @@ public class PagesBase {
 		NORMAL 
 	}; 
 
+	
 	/**
 	 * Take screenshot
 	 * @param status	- FINAL, FAIL OR NORMAL depending on test stage
@@ -105,12 +106,37 @@ public class PagesBase {
 	}
 	
 	
+	
+	protected void alert(int seconds) {
+
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, seconds); 
+			wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			System.out.println("Alert present and closed.");
+		} catch(Exception e) {
+			System.out.println("Alert NOT present.");
+		}
+	}
+	
+	
 	/**
 	 * Return pageobject simple name
 	 */
 	protected String getName()
 	{
 		return this.getClass().getSimpleName();
+	}
+	
+	
+	protected int getLastIndex()
+	{
+		return jHelper.getLastIndex();
+	}
+	
+	protected void writeLastIndex(int index)
+	{
+		jHelper.writeLastIndex(index);;
 	}
 	
 }

@@ -10,15 +10,45 @@ import java.util.Set;
 import org.json.simple.parser.JSONParser;
 
 import org.json.simple.parser.ParseException;
-
 import org.json.simple.JSONObject;
 
 public class JSONHelper {
 
 	public static String claimVault;
-	private String resultFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\ResultsData.json";
-	private String claimsFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\ClaimsData.json";
-	private String testDataFilePath = "C:\\WORK\\AvivaItalia\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\TC740data.json";
+	private String resultsFilePath;
+	private String claimsFilePath;
+	private String environmentDataFilePath;
+	private String testDataFilePath;
+	
+	
+	// testirati sa provjerom ID-a svakog procesa
+	
+	/******** SINGLETON ********/
+	/*
+	 * Only one object of this class is necessary 
+	 * */
+	
+	// static because it needs to be accessible globally
+	private static JSONHelper firstInstance = null;
+	
+	// private constructor assures that and object can't be created outside of this class
+	private JSONHelper() {}
+	
+	public static JSONHelper getInstance()
+	{
+		// Create an object only if it doesn't exist already
+		if (firstInstance == null)
+		{
+			// Create new object and store it as a variable
+			// lazy instantiation = if the object isn't needed it will never be created
+			firstInstance = new JSONHelper();
+		}
+		
+		return firstInstance;
+	}
+	
+	/******** SINGLETON ********/
+	
 	
 	/**
 	 * Write test result into JSON file
@@ -33,7 +63,7 @@ public class JSONHelper {
 
 		try {	
 			JSONParser parser = new JSONParser();
-			Object oldObj = parser.parse(new FileReader(resultFilePath));
+			Object oldObj = parser.parse(new FileReader(resultsFilePath));
 			JSONObject jsonObject = (JSONObject) oldObj;
 			JSONObject resultsObject = (JSONObject) jsonObject.get("results");
 			
@@ -48,7 +78,7 @@ public class JSONHelper {
 				System.out.println("RESULTS: entry added-> " + testName + ": " + result);
 			}
 			
-			file = new FileWriter(resultFilePath);
+			file = new FileWriter(resultsFilePath);
 			file.write(jsonObject.toString());
 			file.flush();
 		} 
@@ -112,7 +142,7 @@ public class JSONHelper {
 		
 		try {	
 			JSONParser parser = new JSONParser();
-			Object oldObj = parser.parse(new FileReader(resultFilePath));
+			Object oldObj = parser.parse(new FileReader(resultsFilePath));
 			JSONObject jsonObject = (JSONObject) oldObj;
 			JSONObject resultsObject = (JSONObject) jsonObject.get("results");
 			
@@ -202,4 +232,142 @@ public class JSONHelper {
 		
 		return "No value found for: " + key + " key";
 	}
+	
+	/**
+	 * Return value for a given environment key
+	 * @param key	-	environment key for which are getting the value
+	 * @return	(String) Value
+	 */
+	public String getEnvironmentAttribute(String key)
+	{
+		
+		try {	
+			JSONParser parser = new JSONParser();
+			Object oldObj = parser.parse(new FileReader(environmentDataFilePath));
+			JSONObject jsonObject = (JSONObject) oldObj;
+				
+			Set<?> keyResultSet = jsonObject.keySet();
+			Iterator<?> iter = keyResultSet.iterator();
+			
+			while(iter.hasNext())
+			{
+				Object keyFromSet = iter.next();
+				if (keyFromSet.equals(key))
+				{
+					return (String) jsonObject.get(keyFromSet);
+				}
+			}
+		} 
+		catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+		catch (ParseException e) { e.printStackTrace(); }
+		catch (Exception e) { e.printStackTrace(); }
+		
+		return "No value for environemnet found: " + key;
+	}
+	
+	
+	
+	/**
+	 * Used to store the last index when automating iteration over multiple WebElements
+	 * @param index	-	index to be written
+	 */
+	@SuppressWarnings("unchecked")
+	public void writeLastIndex(int index)
+	{
+		FileWriter file;
+		
+
+		try {	
+			JSONParser parser = new JSONParser();
+			Object oldObj = parser.parse(new FileReader(testDataFilePath));
+			JSONObject jsonObject = (JSONObject) oldObj;
+			
+			String indexStr = String.valueOf(index);
+			jsonObject.put("lastIndex", indexStr);
+			System.out.println("Entry added-> lastIndex: " + index);
+
+			
+			file = new FileWriter(testDataFilePath);
+			file.write(jsonObject.toString());
+			file.flush();
+		} 
+		catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+		catch (ParseException e) { e.printStackTrace(); }
+		catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	
+	/**
+	 * Used to get the last index when automating iteration over multiple WebElements
+	 * @return	-2	-	valuer returned if an index hasn't been found
+	 */
+	public int getLastIndex()
+	{
+		try {	
+			JSONParser parser = new JSONParser();
+			Object oldObj = parser.parse(new FileReader(testDataFilePath));
+			JSONObject jsonObject = (JSONObject) oldObj;
+				
+			Set<?> keyResultSet = jsonObject.keySet();
+			Iterator<?> iter = keyResultSet.iterator();
+			
+			while(iter.hasNext())
+			{
+				Object keyFromSet = iter.next();
+				if (keyFromSet.equals("lastIndex"))
+				{
+					String lastIndex = (String)jsonObject.get(keyFromSet);
+					
+					return Integer.parseInt(lastIndex);
+				}
+			}
+		} 
+		catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+		catch (ParseException e) { e.printStackTrace(); }
+		catch (Exception e) { e.printStackTrace(); }
+		
+		return -2;
+	}
+	
+	
+	/**
+	 * Set data file path for the current test. Used with test parameters.
+	 * @param filePath	-	path of the test data file
+	 */
+	public void setTestDataFilePath(String filePath)
+	{
+		this.testDataFilePath = filePath;
+	}
+	
+	/**
+	 * Set data file path. Used with test parameters.
+	 * @param filePath	-	path of the results file
+	 */
+	public void setResultsFilePath(String filePath)
+	{
+		this.resultsFilePath = filePath;
+	}
+	
+	/**
+	 * Set claims file path. Used with test parameters.
+	 * @param filePath	-	path of the claims file
+	 */
+	public void setClaimsFilePath(String filePath)
+	{
+		this.claimsFilePath = filePath;
+	}
+	
+	/**
+	 * Set environment file path. Used with test parameters.
+	 * @param filePath	-	path of the claims file
+	 */
+	public void setEnvironmentFilePath(String filePath)
+	{
+		this.environmentDataFilePath = filePath;
+	}
+	
+	
 }

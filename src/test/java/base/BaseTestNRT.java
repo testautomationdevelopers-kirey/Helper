@@ -1,23 +1,14 @@
 package base;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.xml.bind.DatatypeConverter;
-
-import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
@@ -32,32 +23,35 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
-
-import it.avivaitalia.sis.test.testdata.TestData;
-
 
 public class BaseTestNRT {
 
 	public WebDriver driver;
-	public static String claimVault;
-	
-	protected TestData environment;
 	protected String className;
 	protected String testName = getClass().getSimpleName();
-	
 	protected String suiteTestName;
-	protected JSONHelper jHelper = new JSONHelper();
+	protected JSONHelper jHelper = JSONHelper.getInstance();
+
 	
-	@BeforeClass
+	@BeforeTest
 	@Parameters({"environment-data","results-data", "claims-data"})
-	public void setUpEnvironment(String environmentData, String resultsData, String claimsData) throws Exception {
+	public void setUpEnvironment(String environment, String results, String claims) throws Exception {
 		//jenkinsJob("RestoreDB");
-		System.out.println("BeforeClass");
-		environment = TestData.get(environmentData);
+		System.out.println("Base: BeforeTest setup");
+		
+		jHelper.setEnvironmentFilePath(environment);
+		System.out.println("Base Test: Environment file path set");
+		
+		jHelper.setResultsFilePath(results);
+		System.out.println("Base Test: Results file path set");
+		
+		jHelper.setClaimsFilePath(claims);
+		System.out.println("Base Test: Claims file path set");
+		
 		driver = initializeDriver();
+		System.out.println("Base Test: Driver initialized");
 	}
 	
 	
@@ -77,17 +71,19 @@ public class BaseTestNRT {
 	//for WEBDRIVER SETUP
 	public WebDriver initializeDriver() throws IOException {
 
-		if(environment.getBrowser().equals("chrome")){
+		String browser = getEnvironmentAttribute("browser");
+		
+		if(browser.equals("chrome")){
 			ChromeOptions chromeOptions = new ChromeOptions();
 			System.setProperty("webdriver.chrome.driver",this.getClass().getSuperclass().getResource("chromedriver.exe").getPath());
 			chromeOptions.addArguments("--lang=it");
 			driver = new ChromeDriver(chromeOptions);
 		}
-		else if(environment.getBrowser().equals("firefox")){
+		else if(browser.equals("firefox")){
 			System.setProperty("webdriver.gecko.driver",this.getClass().getSuperclass().getResource("geckodriver.exe").getPath());
 			driver = new FirefoxDriver();
 		}
-		else if(environment.getBrowser().equals("headlessChrome")){
+		else if(browser.equals("headlessChrome")){
 			ChromeOptions chromeOptions = new ChromeOptions();
 			System.setProperty("webdriver.chrome.driver",this.getClass().getSuperclass().getResource("chromedriver.exe").getPath());
 			chromeOptions.addArguments("--headless");
@@ -290,4 +286,30 @@ public class BaseTestNRT {
 	{
 		return jHelper.getJSONAttribute(key);
 	}
+	
+	/**
+	 * Get environment value for a given key
+	 * @param key	-	key for which are getting the value
+	 * @return	(String) Value
+	 */
+	public String getEnvironmentAttribute(String key)
+	{
+		return jHelper.getEnvironmentAttribute(key);
+	}
+	
+	
+	/**
+	 * Get current test's data file
+	 * @return	-	data file path
+	 */
+	protected String getTestDataFilePath()
+	{
+		String projectDir = System.getProperty("user.dir");
+		String jsonDirectory = "\\src\\test\\java\\it\\avivaitalia\\sis\\test\\testdata\\";
+		String formatedFileName = testName.replace("Test", "data");
+		String finalFilePath = projectDir + jsonDirectory + formatedFileName + ".json";
+		
+		return finalFilePath;
+	}
+	
 }
